@@ -12,6 +12,6 @@ Willkommen! Welcome!
 🇬🇧 **[To the English instructions (README.en.md)](README.en.md)**
 
 ---
-- [Website](zirkusgkm.netlify.app)
+- [Website](https://zirkusgkm.netlify.app)
 - [Contact](mailto:kmuc@proton.me)
 - Questions, feedback or your own ideas? **Issues & pull requests welcome!**
