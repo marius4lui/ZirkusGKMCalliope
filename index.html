@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calliope Zirkus Projekt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Fira+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      color: #22223b;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem 1rem 1rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.2em;
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      color: #4f4f6e;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .toggle {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .toggle button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.7em 2em;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .toggle button.active {
+      background: #22223b;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 32px rgba(99,102,241,0.08);
+      padding: 2rem;
+    }
+    pre, code {
+      font-family: 'Fira Mono', Consolas, Menlo, monospace;
+      background: #f3f4f6;
+      color: #22223b;
+      border-radius: 0.7em;
+      padding: 1em 1em 1em 2.5em;
+      overflow-x: auto;
+      font-size: 1.11em;
+      line-height: 1.65;
+      box-shadow: 0 4px 32px rgba(99,102,241,0.10);
+      border: 1.5px solid #e0e7ff;
+      margin-bottom: 1.2em;
+    }
+    .explanation {
+      margin: 2rem 0 1.5rem 0;
+      background: #e0e7ff;
+      border-left: 5px solid #6366f1;
+      padding: 1.2rem 1.5rem;
+      border-radius: 0.7rem;
+      font-size: 1.1rem;
+    }
+    .blockly {
+      display: none;
+      text-align: center;
+      margin: 2rem 0;
+    }
+    .blockly img {
+      max-width: 100%;
+      border-radius: 1rem;
+      box-shadow: 0 2px 16px rgba(99,102,241,0.12);
+    }
+    .scratch-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .block {
+      display: inline-block;
+      min-width: 220px;
+      padding: 0.8em 1.5em;
+      border-radius: 30px 30px 30px 30px/40px 40px 40px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.13);
+      margin: 0.2em 0.1em;
+      position: relative;
+      transition: transform 0.1s;
+    }
+    .block.event {
+      background: linear-gradient(90deg, #ffb300 60%, #ffd54f 100%);
+      border-bottom-left-radius: 60px 50px;
+      border-top-left-radius: 60px 50px;
+      box-shadow: 0 2px 12px rgba(255,179,0,0.13);
+    }
+    .block.action {
+      background: linear-gradient(90deg, #29b6f6 60%, #4fc3f7 100%);
+      border-bottom-right-radius: 60px 50px;
+      border-top-right-radius: 60px 50px;
+      box-shadow: 0 2px 12px rgba(41,182,246,0.13);
+    }
+    .block.function {
+      background: linear-gradient(90deg, #66bb6a 60%, #a5d6a7 100%);
+      box-shadow: 0 2px 12px rgba(102,187,106,0.13);
+    }
+    .block.forever {
+      background: linear-gradient(90deg, #ab47bc 60%, #ce93d8 100%);
+      border-radius: 40px 40px 40px 40px/60px 60px 60px 60px;
+      box-shadow: 0 2px 12px rgba(171,71,188,0.13);
+    }
+    .block-explanations {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      background: #f3f4f6;
+      border-radius: 1rem;
+      padding: 1.2rem 1.5rem;
+      font-size: 1.05rem;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.06);
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0.5rem 0.2rem; border-radius: 0.7rem; }
+      h1 { font-size: 1.15rem; }
+      .subtitle { font-size: 1rem; }
+      .toggle { flex-direction: column; gap: 0.5rem; margin-bottom: 1.2rem; }
+      .toggle button { font-size: 1.08rem; padding: 1em 0; width: 100%; border-radius: 2.5em; }
+      .explanation { font-size: 1.05rem; padding: 1em 0.7em; border-radius: 0.7rem; }
+      .blockly { margin: 1rem 0 0.5rem 0; }
+      .scratch-blocks { flex-direction: column; gap: 0.7rem; }
+      .block, .single-block .block { min-width: 90vw; max-width: 98vw; font-size: 1.08rem; padding: 1.1em 0.5em 1.1em 2.5em; border-radius: 1.2em; }
+      .single-block { min-height: 70px; margin-bottom: 0.7rem; }
+      .block-explanations, #singleExplanation { font-size: 1.08rem; padding: 1em 0.7em 1em 1.2em; border-radius: 0.7rem; min-width: unset; max-width: 98vw; margin-top: 0.7rem; }
+      .step-indicator { font-size: 1.08rem; padding: 0.3em 0.7em; border-radius: 0.8em; }
+      .progress-bar { width: 90vw; height: 10px; margin: 0.5rem auto 1rem auto; }
+      #progressInner { border-radius: 8px; }
+      .animation-controls { flex-direction: column; gap: 0.5rem; margin-top: 0.2rem; align-items: stretch; }
+      .animation-controls button, .to-code-btn, .intro-content button, .skip-btn { font-size: 1.13rem; padding: 1em 0; width: 100%; border-radius: 2.5em; margin: 0.2em 0; }
+      .final-banner, .super-banner { font-size: 1.1rem; padding: 1em 0.5em; border-radius: 1.2em; }
+      .super-banner { font-size: 1.3rem; padding: 1.2em 0.5em; border-radius: 1.5em; }
+      .code-toolbar { justify-content: center; margin-bottom: 0.7em; }
+      .copy-btn { font-size: 1.1em; padding: 0.8em 0; width: 100%; border-radius: 2em; }
+      pre.line-numbers { font-size: 0.93em; padding-left: 1.2em !important; border-radius: 0.7em; }
+      .code-info { font-size: 0.98em; padding: 0.7em 0.7em; border-radius: 0.7em; }
+      .intro-modal { align-items: flex-end; }
+      .intro-content { max-width: 98vw; width: 100vw; border-radius: 1.2em 1.2em 0 0; padding: 1.2em 0.5em 1em 0.5em; font-size: 1.08rem; }
+      .intro-content h2 { font-size: 1.2rem; }
+      .intro-content p { font-size: 1.05rem; }
+      .confetti { height: 60px !important; }
+    }
+    .scratch-animation {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .scratch-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+    .block {
+      display: inline-block;
+      min-width: 220px;
+      padding: 0.8em 1.5em;
+      border-radius: 30px 30px 30px 30px/40px 40px 40px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.13);
+      margin: 0.2em 0.1em;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      opacity: 0.5;
+      filter: grayscale(0.4);
+    }
+    .block.active {
+      opacity: 1;
+      filter: none;
+      z-index: 2;
+      box-shadow: 0 0 32px 4px #ffd54f, 0 4px 16px rgba(99,102,241,0.13);
+      transform: scale(1.08) rotate(-2deg);
+      animation: block-pop 0.5s;
+    }
+    @keyframes block-pop {
+      0% { transform: scale(0.9) rotate(0deg); }
+      60% { transform: scale(1.12) rotate(2deg); }
+      100% { transform: scale(1.08) rotate(-2deg); }
+    }
+    .animation-controls {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .animation-controls button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.6em 1.6em;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    }
+    .animation-controls button:disabled {
+      background: #bfc2e2;
+      cursor: not-allowed;
+    }
+    .simple-steps {
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .step-indicator {
+      font-size: 1.2rem;
+      color: #6366f1;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .single-block {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90px;
+      margin-bottom: 1.2rem;
+    }
+    .block {
+      min-width: 260px;
+      font-size: 1.2rem;
+      padding: 1.1em 2em;
+      margin: 0;
+      opacity: 1;
+      filter: none;
+      box-shadow: 0 0 32px 4px #ffd54f, 0 4px 16px rgba(99,102,241,0.13);
+      transform: scale(1.08) rotate(-2deg);
+      animation: block-pop 0.5s;
+    }
+    .block-explanations {
+      font-size: 1.1rem;
+      background: #f3f4f6;
+      border-radius: 1rem;
+      padding: 1.2rem 1.5rem;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.06);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .step-indicator {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, #6366f1 0%, #ffb300 100%);
+      color: white;
+      border-radius: 1.2rem;
+      padding: 0.4em 1.2em;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.10);
+      letter-spacing: 1px;
+      position: relative;
+    }
+    .progress-bar {
+      width: 320px;
+      height: 12px;
+      background: #e0e7ff;
+      border-radius: 8px;
+      margin: 0.7rem auto 1.2rem auto;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    }
+    #progressInner {
+      height: 100%;
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+      border-radius: 8px;
+      width: 0%;
+      transition: width 0.5s cubic-bezier(.4,2,.6,1);
+    }
+    .single-block {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 110px;
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+    .block {
+      min-width: 280px;
+      font-size: 1.25rem;
+      padding: 1.3em 2.2em 1.3em 3em;
+      margin: 0;
+      opacity: 1;
+      filter: none;
+      box-shadow: 0 0 32px 4px #ffd54f, 0 4px 16px rgba(99,102,241,0.13);
+      transform: scale(1.08) rotate(-2deg);
+      animation: block-pop 0.5s, block-slide-in 0.7s;
+      position: relative;
+      background-repeat: no-repeat;
+      background-position: 1.1em center;
+      background-size: 1.6em 1.6em;
+      color: #fff;
+      font-weight: 700;
+      line-height: 1.5;
+      word-break: break-word;
+      text-align: left;
+    }
+    .block span {
+      color: #fff;
+      font-size: 1.22em;
+      font-weight: 700;
+      line-height: 1.5;
+      word-break: break-word;
+      text-shadow: 0 1px 2px rgba(34,34,59,0.18);
+    }
+    .block.event { background-image: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="gold" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="14" stroke="%23b36b00" stroke-width="4" fill="gold"/><circle cx="16" cy="16" r="14" fill="none" stroke="black" stroke-width="1.5"/></svg>'); background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%); }
+    .block.action { background-image: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="deepskyblue" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="14" width="20" height="4" rx="2" fill="deepskyblue" stroke="%23005a8c" stroke-width="3"/><rect x="6" y="14" width="20" height="4" rx="2" fill="none" stroke="black" stroke-width="1.2"/></svg>'); background: linear-gradient(90deg, #29b6f6 60%, #0288d1 100%); }
+    .block.function { background-image: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="mediumseagreen" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="16" height="16" rx="4" fill="mediumseagreen" stroke="%2317693a" stroke-width="3"/><rect x="8" y="8" width="16" height="16" rx="4" fill="none" stroke="black" stroke-width="1.2"/></svg>'); background: linear-gradient(90deg, #66bb6a 60%, #388e3c 100%); }
+    .block.forever { background-image: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="mediumpurple" xmlns="http://www.w3.org/2000/svg"><ellipse cx="16" cy="16" rx="12" ry="12" fill="mediumpurple" stroke="%235e2d91" stroke-width="4"/><ellipse cx="16" cy="16" rx="12" ry="12" fill="none" stroke="black" stroke-width="1.2"/></svg>'); background: linear-gradient(90deg, #ab47bc 60%, #6a1b9a 100%); }
+    @keyframes block-slide-in {
+      0% { opacity: 0; transform: translateY(40px) scale(0.95) rotate(-2deg); }
+      100% { opacity: 1; transform: translateY(0) scale(1.08) rotate(-2deg); }
+    }
+    .animation-controls button {
+      background: linear-gradient(90deg, #6366f1 0%, #ffb300 100%);
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.7em 2em;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+      margin: 0 0.2em;
+    }
+    .animation-controls button:disabled {
+      background: #bfc2e2;
+      cursor: not-allowed;
+    }
+    .animation-controls button:hover:not(:disabled) {
+      transform: scale(1.07);
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+    }
+    .final-banner {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+      border-radius: 1.5rem;
+      padding: 1.2em 2em;
+      box-shadow: 0 4px 32px rgba(99,102,241,0.13);
+      animation: banner-pop 1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      letter-spacing: 1px;
+    }
+    @keyframes banner-pop {
+      0% { opacity: 0; transform: scale(0.8); }
+      60% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    /* Prism.js Styles */
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css');
+    .code-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.3em;
+    }
+    .copy-btn {
+      background: linear-gradient(90deg, #6366f1 0%, #ffb300 100%);
+      color: white;
+      border: none;
+      border-radius: 1.5em;
+      padding: 0.5em 1.3em;
+      font-size: 1em;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    }
+    .copy-btn:hover {
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+      transform: scale(1.07);
+    }
+    pre.line-numbers {
+      position: relative;
+      padding-left: 2.5em !important;
+      border-radius: 0.7em;
+      background: #f3f4f6 !important;
+      color: #22223b !important;
+      font-size: 1.11em;
+      line-height: 1.65;
+      box-shadow: 0 4px 32px rgba(99,102,241,0.10);
+      border: 1.5px solid #e0e7ff;
+      margin-bottom: 1.2em;
+      overflow-x: auto;
+    }
+    .code-explanations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7em;
+      margin-bottom: 1.5em;
+      justify-content: flex-start;
+    }
+    .code-info {
+      background: linear-gradient(90deg, #6366f1 0%, #ffb300 100%);
+      color: white;
+      border-radius: 1em;
+      padding: 0.9em 1.5em;
+      font-size: 1.08em;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+      margin-bottom: 0.2em;
+      line-height: 1.6;
+    }
+    /* Prism.js Zeilennummern besser lesbar */
+    .line-numbers-rows > span {
+      font-size: 1em;
+      color: #bfc2e2;
+      padding-left: 0.2em;
+      letter-spacing: 0.01em;
+    }
+    @media (max-width: 600px) {
+      pre.line-numbers, pre, code {
+        font-size: 1em;
+        padding-left: 1.2em !important;
+        padding-right: 0.5em;
+        border-radius: 0.5em;
+      }
+      .code-info { font-size: 1em; padding: 0.8em 0.7em; }
+    }
+    .intro-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(34,34,59,0.85);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.7s;
+    }
+    .intro-modal.force-hide { display: none !important; }
+    .intro-content {
+      background: white;
+      border-radius: 1.5em;
+      box-shadow: 0 8px 48px rgba(99,102,241,0.18);
+      padding: 2em 1.2em 1.5em 1.2em;
+      max-width: 350px;
+      text-align: center;
+      color: #22223b;
+      animation: popIn 0.7s;
+    }
+    .intro-content h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      color: #ffb300;
+      margin-bottom: 0.5em;
+    }
+    .intro-content p {
+      font-size: 1.1rem;
+      margin-bottom: 1.2em;
+    }
+    .intro-content button {
+      margin: 0.3em 0.3em 0 0.3em;
+      background: linear-gradient(90deg, #6366f1 0%, #ffb300 100%);
+      color: white;
+      border: none;
+      border-radius: 2em;
+      padding: 0.7em 1.7em;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    }
+    .intro-content button:hover {
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+      transform: scale(1.07);
+    }
+    .skip-btn {
+      background: #e0e7ff;
+      color: #6366f1;
+      font-weight: bold;
+      border: none;
+      border-radius: 2em;
+      padding: 0.7em 1.7em;
+      font-size: 1.1rem;
+      margin-left: 0.5em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .skip-btn:hover {
+      background: #6366f1;
+      color: #fff;
+    }
+    .super-banner {
+      margin-top: 2.2rem;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+      border-radius: 2rem;
+      padding: 1.3em 2.5em;
+      box-shadow: 0 4px 32px rgba(99,102,241,0.13);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      letter-spacing: 1px;
+      animation: banner-pop 1s;
+      position: relative;
+      overflow: visible;
+    }
+    .confetti {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      60% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .to-code-btn {
+      background: linear-gradient(90deg, #6366f1 0%, #ffb300 100%);
+      color: white;
+      border: none;
+      border-radius: 2em;
+      padding: 0.8em 2.2em;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+      margin: 0.5em 0;
+    }
+    .to-code-btn:hover {
+      background: linear-gradient(90deg, #ffb300 0%, #6366f1 100%);
+      transform: scale(1.07);
+    }
+    .block-explanations, #singleExplanation {
+      font-size: 1.22rem;
+      background: #fff;
+      border-radius: 1.1rem;
+      color: #1a1a1a;
+      box-shadow: 0 2px 12px rgba(99,102,241,0.10);
+      margin-bottom: 1.7rem;
+      text-align: left;
+      font-weight: 600;
+      border-left: 8px solid #6366f1;
+      padding: 1.3rem 1.5rem 1.3rem 2.2rem;
+      margin-top: 1.2rem;
+      min-width: 260px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInStep 0.5s;
+    }
+    @keyframes fadeInStep {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* Modal hidden fallback */
+    .intro-modal.hidden { display: none !important; }
+    .code-preview-outer {
+      position: relative;
+      margin: 2.5em 0 1.5em 0;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .code-preview-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
+      opacity: 0.18;
+      filter: blur(32px);
+      border-radius: 2.2em;
+      z-index: 0;
+    }
+    .code-preview-inner {
+      position: relative;
+      background: rgba(30, 41, 59, 0.88);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid #334155;
+      border-radius: 1.5em;
+      padding: 1.5em 1.2em 1.2em 1.2em;
+      box-shadow: 0 8px 32px rgba(99,102,241,0.18);
+      z-index: 1;
+    }
+    .code-preview-header {
+      margin-bottom: 0.7em;
+    }
+    .code-dots {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .dot {
+      width: 0.85em;
+      height: 0.85em;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #facc15; }
+    .dot-green { background: #22c55e; }
+    .code-filename {
+      margin-left: 1.2em;
+      color: #cbd5e1;
+      font-size: 1em;
+      font-family: 'Fira Mono', monospace;
+      opacity: 0.8;
+    }
+    .code-preview-pre {
+      background: #0f172a !important;
+      color: #f1f5f9 !important;
+      border-radius: 1em;
+      font-size: 1.08em;
+      line-height: 1.7;
+      padding: 1.2em 1em 1.2em 2.5em !important;
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      overflow-x: auto;
+    }
+    .code-preview-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1em;
+      gap: 1em;
+    }
+    .code-preview-info {
+      color: #cbd5e1;
+      font-size: 0.98em;
+      opacity: 0.8;
+    }
+    @media (max-width: 600px) {
+      .code-preview-outer { margin: 1.2em 0 0.7em 0; }
+      .code-preview-inner { padding: 1em 0.3em 0.7em 0.3em; border-radius: 1em; }
+      .code-preview-pre { font-size: 0.98em; padding: 0.7em 0.2em 0.7em 1.2em !important; border-radius: 0.7em; }
+      .code-filename { font-size: 0.93em; }
+      .code-preview-toolbar { flex-direction: column; align-items: flex-start; gap: 0.5em; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Einweisungs-Modal -->
+  <div id="introModal" class="intro-modal">
+    <div class="intro-content">
+      <h2>🎪 Los geht's!</h2>
+      <p>Klick und entdecke, wie der Zirkus funktioniert.<br><b>Erst Blöcke, dann GitHub!</b></p>
+      <button id="startShowBtn">Start</button>
+      <button id="skipBtn" class="skip-btn">Überspringen</button>
+    </div>
+  </div>
+  <header>
+    <h1>🤹‍♂️ Calliope Zirkus Projekt</h1>
+    <div class="subtitle">Zwei Calliope steuern einen Mini-Zirkus – mit Code und Erklärung!</div>
+  </header>
+  <div class="toggle">
+    <button id="showBlocks" class="active">Blöcke anzeigen</button>
+    <a href="https://github.com/DEIN-REPO" target="_blank" rel="noopener" class="to-code-btn" style="text-decoration:none;">Code auf GitHub</a>
+  </div>
+  <div class="container">
+    <div class="explanation">
+      <strong>Projektidee:</strong> <br>
+      Zwei Calliope mini steuern gemeinsam einen kleinen Zirkus. Über Funk werden Start- und Stoppbefehle ausgetauscht, die Motoren eines Maqueen-Roboters führen Kunststücke aus und LEDs sorgen für Zirkus-Atmosphäre. <br><br>
+      <strong>Du kannst unten die Blockansicht Schritt für Schritt erleben. Den vollständigen Code findest du auf GitHub!</strong>
+    </div>
+    <div id="blockView" class="blockly">
+      <h2>Block-Ansicht (Schritt für Schritt)</h2>
+      <div class="scratch-animation simple-steps">
+        <div class="step-indicator" id="stepIndicator"></div>
+        <div class="progress-bar"><div id="progressInner"></div></div>
+        <div class="single-block" id="singleBlock"></div>
+        <div class="block-explanations" id="singleExplanation"></div>
+        <div class="animation-controls" id="blockControls">
+          <button id="prevStep" disabled>⏪ Zurück</button>
+          <button id="nextStep">Weiter ⏩</button>
+          <button id="restartAnim" style="display:none">🔄 Nochmal ansehen</button>
+          <button id="skipBlocks" class="skip-btn">Überspringen</button>
+        </div>
+        <div id="toCodeBtnWrap" style="display:none; text-align:center; margin-top:1.5em;">
+          <a href="https://github.com/marius4lui/ZirkusGKMCalliope" target="_blank" rel="noopener" class="to-code-btn">👉 Jetzt Code auf GitHub ansehen</a>
+        </div>
+        <div id="finalBanner" class="final-banner" style="display:none">
+          <div class="super-banner">
+            <canvas class="confetti"></canvas>
+            🎉 Super! Du hast alles gesehen! 🎉
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer style="text-align:center; margin:2.5em 0 1.2em 0; color:#6366f1; font-size:1.05em;">
+    <a href="#" id="impressumLink" style="color:#6366f1; text-decoration:underline; cursor:pointer;">Impressum</a>
+  </footer>
+  <div id="impressumModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(34,34,59,0.85); z-index:20000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:1.5em; box-shadow:0 8px 48px rgba(99,102,241,0.18); padding:2em 1.2em 1.5em 1.2em; max-width:350px; width:90vw; text-align:left; color:#22223b; position:relative;">
+      <h2 style="color:#6366f1; margin-top:0;">Impressum</h2>
+      <div style="margin-bottom:1.2em; line-height:1.6;">
+        Sebastian Lui<br>
+        Ziegleistr. 1/2<br>
+        70825 Korntal-Münchingen<br>
+        Deutschland<br>
+        Tel: <a href="tel:+4916095363150" style="color:#6366f1; text-decoration:underline;">+49 160 95363150</a>
+      </div>
+      <button id="closeImpressum" style="background:#6366f1; color:white; border:none; border-radius:2em; padding:0.7em 1.7em; font-size:1.1rem; cursor:pointer; font-family:inherit; transition:background 0.2s, transform 0.1s; box-shadow:0 2px 8px rgba(99,102,241,0.08);">Schließen</button>
+    </div>
+  </div>
+  <!-- DSGVO-konformer Cookie-Banner -->
+  <div id="cookieBanner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(34,34,59,0.98); color:white; z-index:30000; padding:1.2em 0.7em; text-align:center; font-size:1.08em; box-shadow:0 -2px 16px rgba(99,102,241,0.13);">
+    <span>Diese Website verwendet nur technisch notwendige Cookies, um die Funktionalität zu gewährleisten. <a href="#" id="cookieImpressumLink" style="color:#ffd54f; text-decoration:underline;">Impressum</a></span>
+    <br>
+    <button id="acceptCookies" style="margin-top:0.7em; background:linear-gradient(90deg,#6366f1 0%,#ffb300 100%); color:white; border:none; border-radius:2em; padding:0.7em 1.7em; font-size:1.1rem; cursor:pointer; font-family:inherit; transition:background 0.2s, transform 0.1s; box-shadow:0 2px 8px rgba(99,102,241,0.08);">OK, verstanden</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // --- Vereinfachte Schritt-für-Schritt-Visualisierung ---
+    const simpleSteps = [
+      {
+        html: '<div class="block event"><span>Wenn Taste A gedrückt</span></div>',
+        text: '🎬 Start: Taste A drücken!'
+      },
+      {
+        html: '<div class="block action"><span>zeige LED-Animation</span></div>',
+        text: '✨ Animation: LEDs leuchten!'
+      },
+      {
+        html: '<div class="block function"><span>starte Zirkus</span></div>',
+        text: '🤖 Zirkus läuft! Motoren & Funk an.'
+      },
+      {
+        html: '<div class="block function"><span>starte Motoren (Kunststücke)</span></div>',
+        text: '🚗 Kunststücke: Roboter fährt!'
+      },
+      {
+        html: '<div class="block forever"><span>wiederhole fortlaufend: Wenn Zirkus läuft → LED-Show</span></div>',
+        text: '💡 Show: LEDs blinken.'
+      },
+      {
+        html: '<div class="block event"><span>Wenn Taste B gedrückt</span></div>',
+        text: '🛑 Stop: Taste B drücken.'
+      },
+      {
+        html: '<div class="block function"><span>stoppe Zirkus</span></div>',
+        text: '⏹️ Zirkus stoppen.'
+      },
+      {
+        html: '<div class="block function"><span>stoppe Motoren</span></div>',
+        text: '🏁 Ende: Motoren aus.'
+      }
+    ];
+    let simpleStep = 0;
+    const singleBlock = document.getElementById('singleBlock');
+    const singleExplanation = document.getElementById('singleExplanation');
+    const stepIndicator = document.getElementById('stepIndicator');
+    const nextBtn2 = document.getElementById('nextStep');
+    const prevBtn2 = document.getElementById('prevStep');
+    const restartBtn2 = document.getElementById('restartAnim');
+    const progressInner = document.getElementById('progressInner');
+    const finalBanner = document.getElementById('finalBanner');
+    const blockControls = document.getElementById('blockControls');
+
+    function showSimpleStep(step) {
+      singleBlock.innerHTML = simpleSteps[step].html;
+      singleExplanation.innerHTML = simpleSteps[step].text;
+      stepIndicator.innerHTML = `🎬 Schritt <span style='font-size:1.4em;'>${step+1}</span> / ${simpleSteps.length}`;
+      prevBtn2.disabled = step === 0;
+      nextBtn2.style.display = step === simpleSteps.length - 1 ? 'none' : '';
+      restartBtn2.style.display = step === simpleSteps.length - 1 ? '' : 'none';
+      progressInner.style.width = `${((step+1)/simpleSteps.length)*100}%`;
+      finalBanner.style.display = step === simpleSteps.length - 1 ? '' : 'none';
+    }
+    nextBtn2.onclick = () => {
+      if (simpleStep < simpleSteps.length - 1) {
+        simpleStep++;
+        showSimpleStep(simpleStep);
+      }
+    };
+    prevBtn2.onclick = () => {
+      if (simpleStep > 0) {
+        simpleStep--;
+        showSimpleStep(simpleStep);
+      }
+    };
+    restartBtn2.onclick = () => {
+      simpleStep = 0;
+      showSimpleStep(simpleStep);
+    };
+    // Initial anzeigen
+    showSimpleStep(simpleStep);
+
+    // --- Einweisungs-Modal und manueller Ablauf ---
+    const introModal = document.getElementById('introModal');
+    const startShowBtn = document.getElementById('startShowBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    let skipToCode = false;
+
+    function showIntro() {
+      introModal.style.display = 'flex';
+      document.getElementById('blockView').style.display = 'block';
+      skipToCode = false;
+    }
+    function startBlocksManual() {
+      // Modal garantiert entfernen
+      introModal.style.display = 'none';
+      introModal.classList.add('force-hide');
+      setTimeout(() => { if (introModal.parentNode) introModal.parentNode.removeChild(introModal); }, 200);
+      document.getElementById('blockView').style.display = 'block';
+      simpleStep = 0;
+      showSimpleStep(simpleStep);
+      blockControls.style.display = '';
+      // Scrolle zu den Blöcken, falls nötig
+      setTimeout(() => {
+        document.getElementById('blockView').scrollIntoView({behavior: 'smooth'});
+      }, 200);
+    }
+    startShowBtn.onclick = () => {
+      startBlocksManual();
+    };
+    skipBtn.onclick = () => {
+      // Modal garantiert entfernen
+      introModal.style.display = 'none';
+      introModal.classList.add('force-hide');
+      setTimeout(() => { if (introModal.parentNode) introModal.parentNode.removeChild(introModal); }, 200);
+      document.getElementById('blockView').style.display = 'block';
+    };
+    // Beim ersten Laden Einweisung zeigen
+    showIntro();
+
+    // Impressum-Link Modal
+    var impressumLink = document.getElementById('impressumLink');
+    var impressumModal = document.getElementById('impressumModal');
+    var closeImpressum = document.getElementById('closeImpressum');
+    impressumLink.onclick = function(e) {
+      e.preventDefault();
+      impressumModal.style.display = 'flex';
+    };
+    closeImpressum.onclick = function() {
+      impressumModal.style.display = 'none';
+    };
+    impressumModal.onclick = function(e) {
+      if (e.target === impressumModal) impressumModal.style.display = 'none';
+    };
+
+    // Cookie-Banner DSGVO
+    var cookieBanner = document.getElementById('cookieBanner');
+    var acceptCookies = document.getElementById('acceptCookies');
+    var cookieImpressumLink = document.getElementById('cookieImpressumLink');
+    function showCookieBanner() {
+      cookieBanner.style.display = 'block';
+    }
+    function hideCookieBanner() {
+      cookieBanner.style.display = 'none';
+    }
+    if (!localStorage.getItem('cookiesAccepted')) {
+      setTimeout(showCookieBanner, 800);
+    }
+    acceptCookies.onclick = function() {
+      localStorage.setItem('cookiesAccepted', 'true');
+      hideCookieBanner();
+    };
+    cookieImpressumLink.onclick = function(e) {
+      e.preventDefault();
+      hideCookieBanner();
+      impressumModal.style.display = 'flex';
+    };
+  });
+  </script>
+</body>
+</html>
