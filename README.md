@@ -5,7 +5,7 @@ Willkommen zum **Calliope Zirkus**! Zwei Calliope mini steuern gemeinsam einen M
 ---
 
 ## ✨ Live-Demo
-👉 [Hier geht's zur interaktiven Block-Visualisierung!](#) *(Demo-Link einfügen)*
+👉 [Hier geht's zur interaktiven Block-Visualisierung!](https://zirkusgkm.netlify.app) *(Demo-Link einfügen)*
 
 ---
 
