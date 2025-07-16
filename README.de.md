@@ -75,7 +75,7 @@ Der vollständige, kommentierte Code steht in [`calliope-zirkus.js`](calliope-zi
 
 ## 🌐 GitHub & Kontakt
 
-- [Website](zirkusgkm.netlify.app)
+- [Website](https://zirkusgkm.netlify.app)
 - [Kontakaufnahme](mailto:kmuc@proton.me)
 - Fragen, Feedback oder eigene Ideen? **Issues & Pull Requests willkommen!**
 
