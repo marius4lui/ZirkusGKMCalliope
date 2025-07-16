@@ -12,5 +12,6 @@ Willkommen! Welcome!
 🇬🇧 **[To the English instructions (README.en.md)](README.en.md)**
 
 ---
-
-[Zum Repository / To the repository](https://github.com/marius4lui/ZirkusGKMCalliope)
+- [Website](zirkusgkm.netlify.app)
+- [Contact](mailto:kmuc@proton.me)
+- Questions, feedback or your own ideas? **Issues & pull requests welcome!**
