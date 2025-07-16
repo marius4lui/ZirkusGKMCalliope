@@ -5,7 +5,7 @@ Welcome to the **Calliope Circus**! Two Calliope mini boards control a mini circ
 ---
 
 ## ✨ Live Demo
-👉 [Try the interactive block visualization here!](#) *(Insert demo link)*
+👉 [Try the interactive block visualization here!](https://zirkusgkm.netlify.app)
 
 ---
 
