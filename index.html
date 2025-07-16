@@ -679,7 +679,7 @@
       <h2>🎪 Los geht's!</h2>
       <p>Klick und entdecke, wie der Zirkus funktioniert.<br><b>Erst Blöcke, dann GitHub!</b></p>
       <button id="startShowBtn">Start</button>
-      <button id="skipBtn" class="skip-btn">Überspringen</button>
+      <!-- Überspringen-Button entfernt -->
     </div>
   </div>
   <header>
@@ -688,7 +688,7 @@
   </header>
   <div class="toggle">
     <button id="showBlocks" class="active">Blöcke anzeigen</button>
-    <a href="https://github.com/DEIN-REPO" target="_blank" rel="noopener" class="to-code-btn" style="text-decoration:none;">Code auf GitHub</a>
+    <a href="https://github.com/marius4lui/ZirkusGKMCalliope" target="_blank" rel="noopener" class="to-code-btn" style="text-decoration:none;">Code auf GitHub</a>
   </div>
   <div class="container">
     <div class="explanation">
@@ -707,7 +707,7 @@
           <button id="prevStep" disabled>⏪ Zurück</button>
           <button id="nextStep">Weiter ⏩</button>
           <button id="restartAnim" style="display:none">🔄 Nochmal ansehen</button>
-          <button id="skipBlocks" class="skip-btn">Überspringen</button>
+          <!-- Überspringen-Button entfernt -->
         </div>
         <div id="toCodeBtnWrap" style="display:none; text-align:center; margin-top:1.5em;">
           <a href="https://github.com/marius4lui/ZirkusGKMCalliope" target="_blank" rel="noopener" class="to-code-btn">👉 Jetzt Code auf GitHub ansehen</a>
@@ -825,7 +825,7 @@
     // --- Einweisungs-Modal und manueller Ablauf ---
     const introModal = document.getElementById('introModal');
     const startShowBtn = document.getElementById('startShowBtn');
-    const skipBtn = document.getElementById('skipBtn');
+    // const skipBtn = document.getElementById('skipBtn'); // entfernt
     let skipToCode = false;
 
     function showIntro() {
@@ -850,13 +850,7 @@
     startShowBtn.onclick = () => {
       startBlocksManual();
     };
-    skipBtn.onclick = () => {
-      // Modal garantiert entfernen
-      introModal.style.display = 'none';
-      introModal.classList.add('force-hide');
-      setTimeout(() => { if (introModal.parentNode) introModal.parentNode.removeChild(introModal); }, 200);
-      document.getElementById('blockView').style.display = 'block';
-    };
+    // skipBtn.onclick entfernt
     // Beim ersten Laden Einweisung zeigen
     showIntro();
 
